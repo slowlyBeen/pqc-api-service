@@ -1,10 +1,10 @@
 server:
   port: 8080
   tomcat:
-    connection-timeout: 10000  # 10? ?? ?? ??? ?? (DoS ??)
+    connection-timeout: 10000  # 10초 내에 처리 안되면 끊음 (DoS 방지)
 
 spring:
   servlet:
     multipart:
-      max-file-size: 1MB      # PQC ?? ??? ?? 1MB? ? ??
-      max-request-size: 1MB   # ?? ?? ?? ??
+      max-file-size: 1MB      # PQC 키가 아무리 커도 1MB는 안 넘음
+      max-request-size: 1MB   # 전체 요청 크기 제한
