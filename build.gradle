@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.github.slowlybeen'
+version = '0.0.1-SNAPSHOT'
+description = 'pqc-api-service'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // --- Spring Boot Web Stack ---
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // --- PQC Core: Bouncy Castle LTS (2025 Standard) ---
+    // 격자 기반 암호(ML-KEM, ML-DSA) 기능을 제공하는 핵심 라이브러리
+    implementation 'org.bouncycastle:bcprov-lts8on:2.73.10'
+    implementation 'org.bouncycastle:bcpkix-lts8on:2.73.10'
+
+    // --- Utilities & Boilerplate ---
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // JSON 직렬화 및 유효성 검사를 위한 추가 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // API 처리율 제한 (DoS 공격 방지)
+    implementation 'com.bucket4j:bucket4j-core:8.7.0'
+
+    // --- Test Stack ---
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
