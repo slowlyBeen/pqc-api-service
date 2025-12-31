@@ -2,7 +2,6 @@ package com.github.slowlybeen.pqc.config;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class RateLimitInterceptor implements HandlerInterceptor {
 
-    // IP별로 버킷을 관리 (Stateless 서버지만, 최소한의 보호를 위해 메모리에 잠시 저장)
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
 
     @Override
@@ -26,7 +24,6 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String clientIp = getClientIp(request);
         Bucket bucket = cache.computeIfAbsent(clientIp, this::createNewBucket);
 
-        // 토큰 1개를 소모. 남은 토큰이 없으면 false 반환
         if (bucket.tryConsume(1)) {
             return true;
         } else {
@@ -38,8 +35,11 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     }
 
     private Bucket createNewBucket(String key) {
-        // 정책: 1초에 20개의 요청만 허용 (PQC 연산 부하 고려)
-        Bandwidth limit = Bandwidth.classic(20, Refill.greedy(20, Duration.ofSeconds(1)));
+        // Bucket4j 8.x 신규 API
+        Bandwidth limit = Bandwidth.builder()
+                .capacity(20)
+                .refillGreedy(20, Duration.ofSeconds(1))
+                .build();
         return Bucket.builder().addLimit(limit).build();
     }
 
