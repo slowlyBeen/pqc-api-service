@@ -1,5 +1,6 @@
 package com.github.slowlybeen.pqc.filter;
 
+import com.github.slowlybeen.pqc.config.SecurityProperties;
 import com.github.slowlybeen.pqc.exception.IpFilterException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,13 +25,13 @@ import java.util.List;
 @Component
 public class IpWhitelistFilter extends OncePerRequestFilter {
 
-    @Value("${security.allowed-ips}")
-    private List<String> allowedIps;
-
+    private final List<String> allowedIps;
     private final HandlerExceptionResolver exceptionResolver;
 
     public IpWhitelistFilter(
+            SecurityProperties securityProperties, // 설정 클래스 주입
             @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver) {
+        this.allowedIps = securityProperties.getAllowedIps(); // List 가져오기
         this.exceptionResolver = exceptionResolver;
     }
 
