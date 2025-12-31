@@ -1,10 +1,33 @@
+spring:
+  application:
+    name: pqc-api-service
+  servlet:
+    multipart:
+      max-file-size: 1MB      # PQC 키가 아무리 커도 1MB는 안 넘음
+      max-request-size: 1MB   # 전체 요청 크기 제한
+
 server:
   port: 8080
   tomcat:
     connection-timeout: 10000  # 10초 내에 처리 안되면 끊음 (DoS 방지)
 
-spring:
-  servlet:
-    multipart:
-      max-file-size: 1MB      # PQC 키가 아무리 커도 1MB는 안 넘음
-      max-request-size: 1MB   # 전체 요청 크기 제한
+security:
+  allowed-ips:
+    - 127.0.0.1           # localhost
+    - 0:0:0:0:0:0:0:1     # IPv6 localhost
+    - 192.168.1.0/24      # 내부망 대역 (예시)
+    - 172.18.0.0/16       # Docker 기본 네트워크
+    - 10.10.1.50          # 특정 서버 (예시)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info    # 노출할 엔드포인트
+      base-path: /actuator       # 기본 경로
+  endpoint:
+    health:
+      show-details: when_authorized
+  health:
+    defaults:
+      enabled: true

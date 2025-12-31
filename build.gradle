@@ -38,12 +38,16 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // JSON 직렬화 및 유효성 검사를 위한 추가 스타터
+    // --- JSON 직렬화 및 유효성 검사를 위한 추가 스타터 ---
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // API 처리율 제한 (DoS 공격 방지)
+    // --- API 처리율 제한 (DoS 공격 방지) ---
     implementation 'com.bucket4j:bucket4j-core:8.7.0'
+
+    // --- Security + Actuator 추가 ---
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // --- Test Stack ---
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
