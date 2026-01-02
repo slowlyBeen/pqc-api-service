@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# 환경변수
+.env
+.env.*
+
+# 빌드 아티팩트
+build/
+.gradle/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.iws
+*.ipr
+out/
+
+# 로그
+logs/
+*.log
+
+# 문서
+*.md
+HELP.md
+README.md
+docs/
+
+# 테스트
+src/test/
+
+# 배포 설정 (빌드 시 불필요)
+deploy/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 기타
+*.swp
+*.bak
+*~

@@ -1,40 +1,32 @@
 server:
-  port: 8080
-  shutdown: graceful      # Graceful Shutdown 활성화
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
   tomcat:
-    connection-timeout: 10000  # 10초 내에 처리 안되면 끊음 (DoS 방지)
+    connection-timeout: ${TOMCAT_TIMEOUT:10000}
 
 spring:
   application:
     name: pqc-api-service
   lifecycle:
-    timeout-per-shutdown-phase: 30s  # 최대 대기 시간
+    timeout-per-shutdown-phase: 30s
   servlet:
     multipart:
-      max-file-size: 1MB      # PQC 키가 아무리 커도 1MB는 안 넘음
-      max-request-size: 1MB   # 전체 요청 크기 제한
+      max-file-size: ${MAX_FILE_SIZE:1MB}
+      max-request-size: ${MAX_REQUEST_SIZE:1MB}
 
 security:
-  allowed-ips:
-    - 127.0.0.1           # localhost
-    - 0:0:0:0:0:0:0:1     # IPv6 localhost
-    - 192.168.1.0/24      # 내부망 대역 (예시)
-    - 172.18.0.0/16       # Docker 기본 네트워크
-    - 10.10.1.50          # 특정 서버 (예시)
+  allowed-ips: ${SECURITY_ALLOWED_IPS:127.0.0.1,0:0:0:0:0:0:0:1}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health, info, prometheus, metrics    # 노출할 엔드포인트
-      base-path: /actuator       # 기본 경로
+        include: health,info,prometheus,metrics
+      base-path: /actuator
   endpoint:
     health:
       show-details: when_authorized
     prometheus:
-      enabled: true
-  health:
-    defaults:
       enabled: true
   metrics:
     tags:
@@ -42,6 +34,6 @@ management:
 
 pqc:
   pool:
-    kem-size: 20           # KEM 키 풀 크기
-    dsa-size: 20           # DSA 키 풀 크기
-    refill-interval: 5000  # 보충 주기 (ms)
+    kem-size: ${PQC_KEM_SIZE:20}
+    dsa-size: ${PQC_DSA_SIZE:20}
+    refill-interval: ${PQC_REFILL_INTERVAL:5000}
